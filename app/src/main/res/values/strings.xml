@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Hydration</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="day_name_format">EEE</string>
+    <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+    <string name="month_name_format">MMMM yyyy</string>
+    <string name="month_only_name_format">MMMM</string>
+    <string name="year_only_format">yyyy</string>
+
+
+    <string name="calendar_title_format">MMMM yyyy</string>
+    <string name="calendar_dayofweek_format">E</string>
+
+
+    <string name="sett_reminder_time_content">8 : 00 PM</string>
+</resources>
