@@ -1,6 +1,7 @@
 package com.example.a16023018.hydration;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -37,9 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -58,6 +61,8 @@ public class SettingFragment extends Fragment {
     LinearLayout ll_set_time, ll_terms;
 
     int hour, min;
+
+    int reqCode = 12345;
 
     ClipboardManager myClipboard;
     public static SettingFragment newInstance(){
@@ -81,18 +86,42 @@ public SettingFragment(){ }
         //final Switch switchN = (Switch)rootView.findViewById(R.id.switchNotification);
         //final Boolean switchState = switchN.isChecked();
 
-
         //Notification
-        localData = new LocalData(getApplicationContext());
-
-        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
-        ll_set_time = (LinearLayout) rootView.findViewById(R.id.ll_set_time);
-        ll_terms = (LinearLayout) rootView.findViewById(R.id.ll_terms);
 
         tvTime = (TextView) rootView.findViewById(R.id.tv_reminder_time_desc);
-
         reminderSwitch = (SwitchCompat) rootView.findViewById(R.id.switchNotification);
+        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked==true){
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.SECOND, 5);
+
+                    Intent intent = new Intent(getActivity(),
+                            ScheduledNotificationReceiver.class);
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            getActivity(), reqCode,
+                            intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                    AlarmManager am = (AlarmManager)
+                            getActivity().getSystemService(Activity.ALARM_SERVICE);
+                    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                            pendingIntent);
+
+                }
+
+            }
+        });
+
+/*
+        //Notification
+        localData = new LocalData(getActivity());
+
+        myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        ll_set_time = (LinearLayout) rootView.findViewById(R.id.ll_set_time);
+        //ll_terms = (LinearLayout) rootView.findViewById(R.id.ll_terms);
 
         hour = localData.get_hour();
         min = localData.get_min();
@@ -134,7 +163,7 @@ public SettingFragment(){ }
 
             }
         });
-
+*/
 
  /*
         switchN.setOnClickListener(new View.OnClickListener() {
@@ -185,13 +214,13 @@ public SettingFragment(){ }
     }
 
     //Notification
-
+/*
     private void showTimePickerDialog(int h, int m) {
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.timepicker_header, null);
 
-        TimePickerDialog builder = new TimePickerDialog(this, R.style.DialogTheme,
+        TimePickerDialog builder = new TimePickerDialog(getActivity(), R.style.DialogTheme,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int min) {
@@ -200,7 +229,7 @@ public SettingFragment(){ }
                         localData.set_hour(hour);
                         localData.set_min(min);
                         tvTime.setText(getFormatedTime(hour, min));
-                        NotificationScheduler.setReminder(this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
+                        NotificationScheduler.setReminder(getActivity(), AlarmReceiver.class, localData.get_hour(), localData.get_min());
 
                     }
                 }, h, m, false);
@@ -238,7 +267,7 @@ public SettingFragment(){ }
             return getResources().getConfiguration().locale;
         }
     }
-
+*/
 
 
 }

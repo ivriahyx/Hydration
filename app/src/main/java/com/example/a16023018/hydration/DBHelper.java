@@ -10,13 +10,13 @@ import android.util.Log;
  */
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "data.db";
     public static final String TABLE_INFO = "information";
     // Columns names
     public static final String COL_ID = "_id";
     public static final String COL_CUPNUMBER = "cupnumber";
-    //public static final String COL_DATE = "date";
+    public static final String COL_DATE = "date";
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -24,8 +24,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql_create_table = "CREATE TABLE " + TABLE_INFO +
                 "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COL_CUPNUMBER + " INTEGER"+")";
-        //+ COL_DATE +" TEXT"
+                + COL_CUPNUMBER + " INTEGER,"+ COL_DATE +" TEXT"+")";
+        //
         db.execSQL(sql_create_table);
         Log.v("Hydration","Database created");
     }

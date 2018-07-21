@@ -1,5 +1,7 @@
 package com.example.a16023018.hydration;
 
+import android.util.Log;
+
 public class Data {
     long id;
     int cupnumber;
@@ -39,5 +41,9 @@ public class Data {
     public String toString() {
         return "" + id + "\nNumber of Cup: " + cupnumber;
         //+ "\nDate: " + date
+    }
+
+    public  void printData(){
+        Log.d("Data class", toString());
     }
 }

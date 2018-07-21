@@ -15,30 +15,46 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Your Current Progress" />
+            android:text="Your Current Progress"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/tvCurrentcupNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="257dp"
+            android:layout_height="300dp"
             android:src="@drawable/mug0" />
 
         <TextView
             android:id="@+id/textViewTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="18sp" />
+
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="10dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textViewMug"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 Mug = 235 ml" />
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="1 Mug = 235 ml"
+            android:textSize="20sp" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="45dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

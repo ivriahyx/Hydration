@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity{
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
+
         Intent i = new Intent(getBaseContext(), MainActivity.class);
         Boolean switchstate = i.getBooleanExtra("switch", false);
 
@@ -116,8 +117,6 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
 
     }
-
-
 
 
 }

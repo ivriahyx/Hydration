@@ -8,28 +8,47 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CalendarTitle">
-        <item name="android:textSize">@dimen/calendar_text_medium</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingBottom">@dimen/calendar_month_title_bottommargin</item>
-        <item name="android:paddingTop">@dimen/calendar_month_topmargin</item>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">#ffffff</item>
     </style>
 
-    <style name="CalendarCell">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+    <style name="settings_item_layout">
+        <item name="android:orientation">vertical</item>
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/items_inbetween_space</item>
+
     </style>
 
-    <style name="CalendarCell.DayHeader">
-        <item name="android:textSize">@dimen/calendar_text_small</item>
+    <style name="settings_header">
+        <item name="android:textColor">@color/textcolorHeader</item>
+        <item name="android:textSize">@dimen/large_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="CalendarCell.CalendarDate">
-        <item name="android:textSize">@dimen/calendar_text_medium</item>
-        <item name="android:textStyle">bold</item>
+    <style name="settings_sub_header">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">@dimen/medium_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="settings_details">
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="switch_theme">
+        <item name="thumbTint">@color/switch_color</item>
+        <item name="trackTint">@color/track_color</item>
     </style>
 
 </resources>
