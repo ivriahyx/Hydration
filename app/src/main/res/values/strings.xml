@@ -4,5 +4,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="sett_reminder_time_content">8 : 00 PM</string>
+    <string-array name="arrays">
+        <item>Every 30 min</item>
+        <item>Every 1 hour</item>
+        <item>Every 2 hour</item>
+
+    </string-array>
 </resources>

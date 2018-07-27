@@ -32,9 +32,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -50,17 +53,17 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
-public class SettingFragment extends Fragment {
+public class SettingFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     String TAG = "HydrationNotification";
     LocalData localData;
 
-    SwitchCompat reminderSwitch;
-    TextView tvTime;
+    ToggleButton tgbtn;
+    Spinner spinner;
 
     LinearLayout ll_set_time, ll_terms;
 
-    int hour, min;
+    int time;
 
     int reqCode = 12345;
 
@@ -82,21 +85,50 @@ public SettingFragment(){ }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_setting, container, false);
-        //final Switch switchN = (Switch)rootView.findViewById(R.id.switchNotification);
-        //final Boolean switchState = switchN.isChecked();
+        final View rootView = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        //Spinner
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.arrays, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        final String text = spinner.getSelectedItem().toString();
+        if(text.equals("Every 1 hour")){
+            time=10;
+
+        }else if(text.equals("Every 2 hour")){
+            time=15;
+        }else{
+            time = 5;
+        }
+
 
         //Notification
+        tgbtn = (ToggleButton)rootView.findViewById(R.id.toggleButton);
 
-        tvTime = (TextView) rootView.findViewById(R.id.tv_reminder_time_desc);
-        reminderSwitch = (SwitchCompat) rootView.findViewById(R.id.switchNotification);
-        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        tgbtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked==true){
-                    Calendar cal = Calendar.getInstance();
-                    cal.add(Calendar.SECOND, 5);
+                if(isChecked){
+                    Boolean checkbtn = tgbtn.isChecked();
+                    Log.d("checkswitch",checkbtn+"");
 
+                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                     SharedPreferences.Editor editor = prefs.edit();
+                     editor.putBoolean("checkswitch", checkbtn);
+                     editor.commit();
+
+
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.SECOND, time);
+                    Log.d("timespinner",""+time);
                     Intent intent = new Intent(getActivity(),
                             ScheduledNotificationReceiver.class);
 
@@ -108,98 +140,19 @@ public SettingFragment(){ }
                             getActivity().getSystemService(Activity.ALARM_SERVICE);
                     am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                             pendingIntent);
-
-                }
-
-            }
-        });
-
-/*
-        //Notification
-        localData = new LocalData(getActivity());
-
-        myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-
-        ll_set_time = (LinearLayout) rootView.findViewById(R.id.ll_set_time);
-        //ll_terms = (LinearLayout) rootView.findViewById(R.id.ll_terms);
-
-        hour = localData.get_hour();
-        min = localData.get_min();
-
-        tvTime.setText(getFormatedTime(hour, min));
-        reminderSwitch.setChecked(localData.getReminderStatus());
-
-        if (!localData.getReminderStatus())
-            ll_set_time.setAlpha(0.4f);
-
-        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                localData.setReminderStatus(isChecked);
-                if (isChecked) {
-                    Log.d(TAG, "onCheckedChanged: true");
-                    NotificationScheduler.setReminder(getActivity(), AlarmReceiver.class, localData.get_hour(), localData.get_min());
-                    ll_set_time.setAlpha(1f);
-                } else {
-                    Log.d(TAG, "onCheckedChanged: false");
-                    NotificationScheduler.cancelReminder(getActivity(), AlarmReceiver.class);
-                    ll_set_time.setAlpha(0.4f);
-                }
-
-            }
-        });
-
-        ll_set_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (localData.getReminderStatus())
-                    showTimePickerDialog(localData.get_hour(), localData.get_min());
-            }
-        });
-
-        ll_terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-*/
-
- /*
-        switchN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Boolean switchState = switchN.isChecked();
-                Intent i = new Intent(getActivity().getBaseContext(),MainActivity.class);
-                i.putExtra("switch", switchState);
-                getActivity().startActivity(i);
-                if((switchN.isChecked()))
-                {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("tgpref", true); // value to store
-                    editor.commit();
-                }
-                else
-                {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("tgpref", false); // value to store
+                }else {
+                    Boolean checkbtn = tgbtn.isChecked();
+                    Log.d("checkswitch",checkbtn+"");
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("checkswitch", checkbtn);
                     editor.commit();
                 }
             }
-
-            });
-
-
-        btnClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataSource dataSource = new DataSource(getActivity());
-                dataSource.deleteData(dataSource.getAllData().size());
-            }
         });
-*/
+
+
+
 
 
         return rootView;
@@ -213,61 +166,42 @@ public SettingFragment(){ }
 
     }
 
-    //Notification
-/*
-    private void showTimePickerDialog(int h, int m) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Boolean checkswitch = prefs.getBoolean("checkswitch", false);
+        String  spinnerValue = prefs.getString("spinneritem","");
+        tgbtn.setChecked(checkswitch);
 
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.timepicker_header, null);
-
-        TimePickerDialog builder = new TimePickerDialog(getActivity(), R.style.DialogTheme,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                        Log.d(TAG, "onTimeSet: hour " + hour);
-                        Log.d(TAG, "onTimeSet: min " + min);
-                        localData.set_hour(hour);
-                        localData.set_min(min);
-                        tvTime.setText(getFormatedTime(hour, min));
-                        NotificationScheduler.setReminder(getActivity(), AlarmReceiver.class, localData.get_hour(), localData.get_min());
-
-                    }
-                }, h, m, false);
-
-        builder.setCustomTitle(view);
-        builder.show();
-
-    }
-
-    public String getFormatedTime(int h, int m) {
-        final String OLD_FORMAT = "HH:mm";
-        final String NEW_FORMAT = "hh:mm a";
-
-        String oldDateString = h + ":" + m;
-        String newDateString = "";
-
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT, getCurrentLocale());
-            Date d = sdf.parse(oldDateString);
-            sdf.applyPattern(NEW_FORMAT);
-            newDateString = sdf.format(d);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(spinnerValue.equals("Every 30 min")){
+            spinner.setSelection(1);
+        }else if(spinnerValue.equals("Every 1 hour")){
+            spinner.setSelection(2);
+        }else{
+            spinner.setSelection(3);
         }
 
-        return newDateString;
+
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
-    public Locale getCurrentLocale() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return getResources().getConfiguration().getLocales().get(0);
-        } else {
-            //noinspection deprecation
-            return getResources().getConfiguration().locale;
-        }
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        String item = parent.getItemAtPosition(pos).toString();
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("spinneritem",spinner.getSelectedItem().toString());
+        Log.d("spinneritem",spinner.getSelectedItem().toString());
+        editor.commit();
+
     }
-*/
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
 
 
 }
