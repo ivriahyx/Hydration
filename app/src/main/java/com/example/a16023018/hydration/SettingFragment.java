@@ -64,7 +64,6 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
     LinearLayout ll_set_time, ll_terms;
 
     int time;
-
     int reqCode = 12345;
 
     ClipboardManager myClipboard;
@@ -97,20 +96,9 @@ public SettingFragment(){ }
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-        final String text = spinner.getSelectedItem().toString();
-        if(text.equals("Every 1 hour")){
-            time=10;
-
-        }else if(text.equals("Every 2 hour")){
-            time=15;
-        }else{
-            time = 5;
-        }
-
 
         //Notification
         tgbtn = (ToggleButton)rootView.findViewById(R.id.toggleButton);
-
 
         tgbtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -124,22 +112,7 @@ public SettingFragment(){ }
                      editor.putBoolean("checkswitch", checkbtn);
                      editor.commit();
 
-
-
-                    Calendar cal = Calendar.getInstance();
-                    cal.add(Calendar.SECOND, time);
-                    Log.d("timespinner",""+time);
-                    Intent intent = new Intent(getActivity(),
-                            ScheduledNotificationReceiver.class);
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                            getActivity(), reqCode,
-                            intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                    AlarmManager am = (AlarmManager)
-                            getActivity().getSystemService(Activity.ALARM_SERVICE);
-                    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                            pendingIntent);
+                    alarmNotify();
                 }else {
                     Boolean checkbtn = tgbtn.isChecked();
                     Log.d("checkswitch",checkbtn+"");
@@ -151,10 +124,6 @@ public SettingFragment(){ }
             }
         });
 
-
-
-
-
         return rootView;
     }
 
@@ -163,45 +132,85 @@ public SettingFragment(){ }
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
     }
+
+    /*
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("userChoiceSpinner",spinnerPos);
+        Log.d("userChoiceSpinner",""+spinnerPos);
+        editor.commit();
+    }
+    */
 
     @Override
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Boolean checkswitch = prefs.getBoolean("checkswitch", false);
-        String  spinnerValue = prefs.getString("spinneritem","");
+        int userchoice = prefs.getInt("userChoiceSpinner",0);
         tgbtn.setChecked(checkswitch);
-
-        if(spinnerValue.equals("Every 30 min")){
-            spinner.setSelection(1);
-        }else if(spinnerValue.equals("Every 1 hour")){
-            spinner.setSelection(2);
-        }else{
-            spinner.setSelection(3);
+        Log.d("spinner selection",""+userchoice);
+        if(userchoice != -1) {
+            // set the selected value of the spinner
+            spinner.setSelection(userchoice);
         }
-
 
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         String item = parent.getItemAtPosition(pos).toString();
+        String text = spinner.getSelectedItem().toString();
 
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("spinneritem",spinner.getSelectedItem().toString());
-        Log.d("spinneritem",spinner.getSelectedItem().toString());
-        editor.commit();
-
+        if(text.equals("Every 1 hour")){
+            time=10;
+            int spinnerPos = 1;
+            Log.d("time",""+time);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("userChoiceSpinner",spinnerPos);
+            editor.commit();
+        }else if(text.equals("Every 2 hour")){
+            time=20;
+            int spinnerPos = 2;
+            Log.d("time",""+time);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("userChoiceSpinner",spinnerPos);
+            editor.commit();
+        }else{
+            time = 5;
+            int spinnerPos = 0;
+            Log.d("time",""+time);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("userChoiceSpinner",spinnerPos);
+            editor.commit();
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+    public void alarmNotify(){
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, time);
+        Log.d("timespinner",""+time);
+        Intent intent = new Intent(getActivity(),
+                ScheduledNotificationReceiver.class);
 
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getActivity(), reqCode,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
+        AlarmManager am = (AlarmManager)
+                getActivity().getSystemService(Activity.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                pendingIntent);
+    }
 
 }

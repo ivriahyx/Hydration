@@ -32,9 +32,10 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
         //build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"default");
-        builder.setContentTitle("Notification to Drink Water");
-        builder.setContentText("");
-        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+        builder.setContentTitle("Hydrate Reminder");
+        builder.setContentText("Time to drink a glass of water.");
+        //builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+        builder.setSmallIcon(R.drawable.water_icon);
         builder.setContentIntent(pIntent);
         builder.setAutoCancel(true);
 
