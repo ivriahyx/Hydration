@@ -63,7 +63,7 @@ public class SettingFragment extends Fragment implements AdapterView.OnItemSelec
 
     LinearLayout ll_set_time, ll_terms;
 
-    int time;
+    int time = 5;
     int reqCode = 12345;
 
     ClipboardManager myClipboard;
@@ -164,18 +164,19 @@ public SettingFragment(){ }
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         String item = parent.getItemAtPosition(pos).toString();
+        int index = spinner.getSelectedItemPosition();
         String text = spinner.getSelectedItem().toString();
-
-        if(text.equals("Every 1 hour")){
-            time=10;
+        Toast.makeText(getActivity(), "Index: "+index, Toast.LENGTH_SHORT).show();
+        if(index==1){
+            time=60;
             int spinnerPos = 1;
             Log.d("time",""+time);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("userChoiceSpinner",spinnerPos);
             editor.commit();
-        }else if(text.equals("Every 2 hour")){
-            time=20;
+        }else if(index==2){
+            time=120;
             int spinnerPos = 2;
             Log.d("time",""+time);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -183,7 +184,7 @@ public SettingFragment(){ }
             editor.putInt("userChoiceSpinner",spinnerPos);
             editor.commit();
         }else{
-            time = 5;
+            time = 30;
             int spinnerPos = 0;
             Log.d("time",""+time);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());

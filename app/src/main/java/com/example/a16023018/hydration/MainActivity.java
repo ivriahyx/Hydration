@@ -38,16 +38,7 @@ public class MainActivity extends AppCompatActivity{
 
     //Notification
     String TAG = "RemindMe";
-    LocalData localData;
-    SwitchCompat reminderSwitch;
-    TextView tvTime, tvTotal;
-
-    LinearLayout ll_set_time, ll_terms;
-
-    int hour, min;
-
-    ClipboardManager myClipboard;
-
+    TextView tvTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,33 +48,7 @@ public class MainActivity extends AppCompatActivity{
         dataSource = new DataSource(MainActivity.this);
         al = new ArrayList<Data>();
 
-        //Notification
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle("Title")
-                .setContentText("Welcome Message......Hello World!")
-                .setSmallIcon(R.drawable.notification_icon)
-                .build();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-
-        Intent i = new Intent(getBaseContext(), MainActivity.class);
-        Boolean switchstate = i.getBooleanExtra("switch", false);
-
-        //sharedpreference
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        boolean tgpref = preferences.getBoolean("tgpref", true);  //default is true
-        if (tgpref = true) //if (tgpref) may be enough, not sure
-        {
-            switchstate = true;
-        } else {
-            switchstate = false;
-        }
-
-
-        if (switchstate == true) {
-            notificationManager.notify(0, notification);
-        }
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
 
@@ -94,15 +59,12 @@ public class MainActivity extends AppCompatActivity{
                 switch (item.getItemId()) {
                     case R.id.action_progression:
                         selectedFragment = ProgressFragment.newInstance();
-                        Toast.makeText(MainActivity.this, "Action Current Progress Clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_all:
                         selectedFragment = AllProgressFragment.newInstance();
-                        Toast.makeText(MainActivity.this, "Action Progression Clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_setting:
                         selectedFragment = SettingFragment.newInstance();
-                        Toast.makeText(MainActivity.this, "Action Settings Clicked", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
